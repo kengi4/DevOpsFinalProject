@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log*
+.npm
+tests
+infra
+.github
+.git
+.gitignore
+.dockerignore
+README.md
+.env
+.env.*
+*.pem
+*.key
+*.tfvars
+*.tfstate*
