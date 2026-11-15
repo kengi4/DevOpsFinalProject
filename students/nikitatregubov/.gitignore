@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+.npm/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# SSH keys and cloud credentials
+*.pem
+*.key
+*.ppk
+*id_rsa*
+*id_ed25519*
+*sa-key*.json
+gcp-key*.json
+credentials.json
+
+# Terraform local state and cache
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+tfplan
+crash.log
+crash.*.log
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
