@@ -1,0 +1,19 @@
+{
+  "name": "cloudpulse",
+  "version": "1.0.0",
+  "description": "CloudPulse — DevOps deployment health monitor and release checklist API & dashboard",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/app.test.js",
+    "check": "node --check src/app.js && node --check src/server.js && node --check src/checksStore.js && node --check src/public/app.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
