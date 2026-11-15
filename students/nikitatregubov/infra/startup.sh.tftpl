@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOG_FILE="/var/log/cloudpulse-startup.log"
+DONE_MARKER="/var/log/cloudpulse-init.done"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+if ! command -v docker >/dev/null 2>&1; then
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -y
+  apt-get install -y --no-install-recommends ca-certificates curl docker.io
+fi
+
+systemctl enable --now docker
+
+if id -u "${ssh_user}" >/dev/null 2>&1; then
+  usermod -aG docker "${ssh_user}"
+fi
+
+touch "$DONE_MARKER"
