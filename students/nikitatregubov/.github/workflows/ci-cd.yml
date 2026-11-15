@@ -219,11 +219,20 @@ jobs:
           printf '%s' "${{ secrets.GCE_SSH_KEY_B64 }}" | tr -d '[:space:]' | base64 -d | tr -d '\r' > ~/.ssh/gce_deploy_key
           chmod 600 ~/.ssh/gce_deploy_key
 
+          SSH_USER="${{ secrets.GCE_SSH_USER }}"
+          if [ -z "$SSH_USER" ]; then
+            SSH_USER="devops"
+          fi
+
           for i in $(seq 1 30); do
-            if ssh-keyscan -T 5 -H "$VM_IP" >> ~/.ssh/known_hosts 2>/dev/null; then
-              exit 0
+            if ssh-keyscan -T 5 -H "$VM_IP" > ~/.ssh/known_hosts.tmp 2>/dev/null && [ -s ~/.ssh/known_hosts.tmp ]; then
+              mv ~/.ssh/known_hosts.tmp ~/.ssh/known_hosts
+              if ssh -i ~/.ssh/gce_deploy_key -o BatchMode=yes -o ConnectTimeout=5 "${SSH_USER}@${VM_IP}" true 2>/dev/null; then
+                exit 0
+              fi
             fi
-            echo "Waiting for SSH on ${VM_IP} (${i}/30)..."
+            rm -f ~/.ssh/known_hosts.tmp
+            echo "Waiting for SSH auth on ${VM_IP} (${i}/30)..."
             sleep 5
           done
           echo "Timed out waiting for SSH on ${VM_IP}" >&2
