@@ -85,9 +85,6 @@ jobs:
     needs: test
     if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.action == 'deploy')
     runs-on: ubuntu-latest
-    outputs:
-      image_ref: ${{ steps.prep.outputs.image_ref }}
-      short_sha: ${{ steps.prep.outputs.short_sha }}
 
     steps:
       - name: Checkout repository
@@ -241,9 +238,16 @@ jobs:
       - name: Pull and restart CloudPulse container on GCE
         env:
           VM_IP: ${{ needs.terraform.outputs.vm_ip }}
-          IMAGE: ${{ needs.build_and_push.outputs.image_ref }}
-          SHORT_SHA: ${{ needs.build_and_push.outputs.short_sha }}
         run: |
+          DOCKER_USER_LOWER=$(printf '%s' "${{ secrets.DOCKER_USERNAME }}" | tr '[:upper:]' '[:lower:]')
+          SHORT_SHA=$(printf '%s' "${{ github.sha }}" | cut -c1-7)
+          IMAGE="${DOCKER_USER_LOWER}/cloudpulse:sha-${SHORT_SHA}"
+
+          if [ -z "$DOCKER_USER_LOWER" ]; then
+            echo "Missing DOCKER_USERNAME repository secret." >&2
+            exit 1
+          fi
+
           SSH_USER="${{ secrets.GCE_SSH_USER }}"
           if [ -z "$SSH_USER" ]; then
             SSH_USER="devops"
