@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloudPulse — Deployment Health & Release Board</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+          <p class="eyebrow">DevOps CI/CD &amp; Google Cloud Monitor</p>
+          <h1>CloudPulse</h1>
+        </div>
+        <div id="health-badge" class="badge badge-loading">Checking...</div>
+      </header>
+
+      <section class="metrics-grid" aria-label="Runtime telemetry">
+        <article class="metric-card">
+          <span class="metric-label">Cloud Target</span>
+          <strong id="meta-cloud" class="metric-value">—</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Version</span>
+          <strong id="meta-version" class="metric-value mono">—</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Environment</span>
+          <strong id="meta-env" class="metric-value">—</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Container Host</span>
+          <strong id="meta-host" class="metric-value mono">—</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Uptime</span>
+          <strong id="meta-uptime" class="metric-value">—</strong>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Memory (RSS / Heap)</span>
+          <strong id="meta-memory" class="metric-value">—</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Release Verification Checklist</h2>
+            <p class="panel-subtitle">Track deployment gates and runtime verification checks</p>
+          </div>
+          <div class="filter-group" role="group" aria-label="Filter checks">
+            <button class="filter-btn active" data-filter="all" type="button">All</button>
+            <button class="filter-btn" data-filter="pending" type="button">Pending</button>
+            <button class="filter-btn" data-filter="verified" type="button">Verified</button>
+          </div>
+        </div>
+
+        <form id="check-form" class="check-form">
+          <input
+            id="check-title"
+            name="title"
+            type="text"
+            placeholder="Add verification check (e.g. SSL certificate active)..."
+            minlength="3"
+            maxlength="140"
+            required
+          />
+          <input
+            id="check-service"
+            name="service"
+            type="text"
+            placeholder="Service (e.g. gcp-vm)"
+            maxlength="60"
+          />
+          <select id="check-severity" name="severity" aria-label="Severity">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+          <button class="btn-primary" type="submit">Add Check</button>
+        </form>
+
+        <p id="form-error" class="form-error" hidden></p>
+        <ul id="checks-list" class="checks-list"></ul>
+      </section>
+
+      <footer class="footer">
+        <span>Endpoints: <code>/health</code> · <code>/ready</code> · <code>/api/info</code> · <code>/api/checks</code></span>
+        <span id="last-sync">Syncing...</span>
+      </footer>
+    </div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
